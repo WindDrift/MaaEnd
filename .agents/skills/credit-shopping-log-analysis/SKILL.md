@@ -70,7 +70,7 @@ task start:.*CreditShoppingMain
 
 ### 3. 还原折扣信息
 
-`IsDiscountPriority2` OCR 会在每次扫描时读取整行商品的折扣标签（`expected: "75|95|99"`），可用**多次扫描对比**定位每件商品的折扣。
+`IsDiscountPriority2` OCR 会在每次扫描时读取整行商品的折扣标签（`expected: "-?\\d{1,2}"`，正则提取 1-2 位数字），可用**多次扫描对比**定位每件商品的折扣。
 
 在 `maafw*.log` 中搜索：
 
@@ -88,7 +88,9 @@ OCRer.*IsDiscountPriority2
 
 配合 `CreditShoppingBuyPriority2` 的命中 box（x 坐标）即可定位该商品的折扣标签（同一列 x 坐标）。
 
-> `filtered_results_` 中出现表示该条目满足 75/95/99 阈值，触发了优先级购买。
+> `filtered_results_` 中出现表示该条目通过了折扣阈值比较（`CreditShoppingDiscountComparePriority{N}` 的 expression `{IsDiscountPriority{N}} <= -{MinDiscountPriority{N}}`），触发了优先级购买。
+>
+> 折扣数值为**负值**（徽标 `-NN%`）；可在日志中搜索 `expression evaluated`，其 `values` / `resolved_expression` 即为各节点解析后的整数与代入后的表达式，可用来核对符号方向与阈值。
 
 ### 3b. 还原每次货架（以 `CreditIcon` 为锚；名字为可选叠加）
 
