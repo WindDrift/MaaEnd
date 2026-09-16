@@ -194,8 +194,8 @@
         },
         "AutoStockBuyDailyGoodsValleyIVItems": {
             "type": "checkbox",
-            "label": "$task.AutoStockStaple.option.AutoStockBuyDailyGoodsValleyIVItems.label",
-            "description": "$task.AutoStockStaple.option.AutoStockBuyDailyGoodsValleyIVItems.description",
+            "label": "$option.ItemSelection.label",
+            "description": "$option.ItemSelection.description",
             "cases": [
                 {
                     "name": "ValleyEngravingPermit",
@@ -500,8 +500,8 @@
         },
         "AutoStockBuyStockFactoryGoodsValleyIVItems": {
             "type": "checkbox",
-            "label": "$task.AutoStockStaple.option.AutoStockBuyStockFactoryGoodsValleyIVItems.label",
-            "description": "$task.AutoStockStaple.option.AutoStockBuyStockFactoryGoodsValleyIVItems.description",
+            "label": "$option.ItemSelection.label",
+            "description": "$option.ItemSelection.description",
             "default_case": [
                 "KeenValleyDetector",
                 "KeenValleyCompass"
@@ -617,8 +617,8 @@
         },
         "AutoStockBuyCulturalGoodsValleyIVItems": {
             "type": "checkbox",
-            "label": "$task.AutoStockStaple.option.AutoStockBuyCulturalGoodsValleyIVItems.label",
-            "description": "$task.AutoStockStaple.option.AutoStockBuyCulturalGoodsValleyIVItems.description",
+            "label": "$option.ItemSelection.label",
+            "description": "$option.ItemSelection.description",
             "cases": [
                 {
                     "name": "BreezeOfKjersch",
@@ -887,17 +887,17 @@
         },
         "AutoStockMinDiscountValleyIV": {
             "type": "input",
-            "label": "$task.AutoStockStaple.option.AutoStockMinDiscountValleyIV.label",
-            "description": "$task.AutoStockStaple.option.AutoStockMinDiscountValleyIV.description",
+            "label": "$option.DiscountValue.label",
+            "description": "$option.DiscountValue.description",
             "inputs": [
                 {
                     "name": "MinDiscountValleyIV",
-                    "label": "$task.AutoStockStaple.option.AutoStockMinDiscountValleyIV.inputs.MinDiscountValleyIV.label",
-                    "description": "$task.AutoStockStaple.option.AutoStockMinDiscountValleyIV.inputs.MinDiscountValleyIV.description",
+                    "label": "$option.DiscountValue.inputs.MinDiscount.label",
+                    "description": "$option.DiscountValue.inputs.MinDiscount.description",
                     "pipeline_type": "int",
                     "verify": "^(?:[0-9]|[1-9][0-9])$",
                     "default": "50",
-                    "pattern_msg": "$task.AutoStockStaple.option.AutoStockMinDiscountValleyIV.inputs.MinDiscountValleyIV.pattern_msg"
+                    "pattern_msg": "$option.DiscountValue.inputs.MinDiscount.pattern_msg"
                 }
             ],
             "pipeline_override": {
@@ -914,8 +914,8 @@
         },
         "AutoStockIncludeNoDiscountValleyIV": {
             "type": "switch",
-            "label": "$task.AutoStockStaple.option.AutoStockIncludeNoDiscountValleyIV.label",
-            "description": "$task.AutoStockStaple.option.AutoStockIncludeNoDiscountValleyIV.description",
+            "label": "$option.IncludeNoDiscount.label",
+            "description": "$option.IncludeNoDiscount.description",
             "default_case": "No",
             "cases": [
                 {
@@ -1038,8 +1038,8 @@
         },
         "AutoStockBuyDailyGoodsWulingItems": {
             "type": "checkbox",
-            "label": "$task.AutoStockStaple.option.AutoStockBuyDailyGoodsWulingItems.label",
-            "description": "$task.AutoStockStaple.option.AutoStockBuyDailyGoodsWulingItems.description",
+            "label": "$option.ItemSelection.label",
+            "description": "$option.ItemSelection.description",
             "cases": [
                 {
                     "name": "WulingEngravingPermit",
@@ -1415,8 +1415,8 @@
         },
         "AutoStockBuyStockFactoryGoodsWulingItems": {
             "type": "checkbox",
-            "label": "$task.AutoStockStaple.option.AutoStockBuyStockFactoryGoodsWulingItems.label",
-            "description": "$task.AutoStockStaple.option.AutoStockBuyStockFactoryGoodsWulingItems.description",
+            "label": "$option.ItemSelection.label",
+            "description": "$option.ItemSelection.description",
             "default_case": [
                 "WulingArtificingCatalyst",
                 "KeenWulingDetector",
@@ -1621,8 +1621,8 @@
         },
         "AutoStockBuyCulturalGoodsWulingItems": {
             "type": "checkbox",
-            "label": "$task.AutoStockStaple.option.AutoStockBuyCulturalGoodsWulingItems.label",
-            "description": "$task.AutoStockStaple.option.AutoStockBuyCulturalGoodsWulingItems.description",
+            "label": "$option.ItemSelection.label",
+            "description": "$option.ItemSelection.description",
             "cases": [
                 {
                     "name": "EurekaTeabox",
@@ -2039,17 +2039,17 @@
         },
         "AutoStockMinDiscountWuling": {
             "type": "input",
-            "label": "$task.AutoStockStaple.option.AutoStockMinDiscountWuling.label",
-            "description": "$task.AutoStockStaple.option.AutoStockMinDiscountWuling.description",
+            "label": "$option.DiscountValue.label",
+            "description": "$option.DiscountValue.description",
             "inputs": [
                 {
                     "name": "MinDiscountWuling",
-                    "label": "$task.AutoStockStaple.option.AutoStockMinDiscountWuling.inputs.MinDiscountWuling.label",
-                    "description": "$task.AutoStockStaple.option.AutoStockMinDiscountWuling.inputs.MinDiscountWuling.description",
+                    "label": "$option.DiscountValue.inputs.MinDiscount.label",
+                    "description": "$option.DiscountValue.inputs.MinDiscount.description",
                     "pipeline_type": "int",
                     "verify": "^(?:[0-9]|[1-9][0-9])$",
                     "default": "50",
-                    "pattern_msg": "$task.AutoStockStaple.option.AutoStockMinDiscountWuling.inputs.MinDiscountWuling.pattern_msg"
+                    "pattern_msg": "$option.DiscountValue.inputs.MinDiscount.pattern_msg"
                 }
             ],
             "pipeline_override": {
@@ -2066,8 +2066,8 @@
         },
         "AutoStockIncludeNoDiscountWuling": {
             "type": "switch",
-            "label": "$task.AutoStockStaple.option.AutoStockIncludeNoDiscountWuling.label",
-            "description": "$task.AutoStockStaple.option.AutoStockIncludeNoDiscountWuling.description",
+            "label": "$option.IncludeNoDiscount.label",
+            "description": "$option.IncludeNoDiscount.description",
             "default_case": "No",
             "cases": [
                 {
