@@ -86,13 +86,10 @@
             4
         ],
         "expected": [
-            "95",
-            "99",
-            "75",
-            "50",
-            "25"
+            // 折扣徽标文本为 "-NN%"（如 "-75%"），提取其中的数字
+            // @i18n-skip
+            "-?\\d{1,2}"
         ],
-        "only_rec": true,
-        "order_by": "Expected"
+        "only_rec": true
     }
 }
