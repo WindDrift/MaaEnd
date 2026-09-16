@@ -51,7 +51,8 @@
             "NotSoldOut",
             "CanNotAfford",
             "Priority2OCR_CanNotAfford_Expected",
-            "IsDiscountPriority2_CanNotAfford"
+            "IsDiscountPriority2_CanNotAfford",
+            "CreditShoppingDiscountComparePriority2_CanNotAfford"
         ],
         "box_index": 4
     },
