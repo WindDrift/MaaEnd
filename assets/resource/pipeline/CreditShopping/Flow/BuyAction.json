@@ -25,7 +25,7 @@
         ]
     },
     "CreditShoppingBuyPriority2": {
-        "desc": "优先购买2（选项：普通购买3物品、折扣设置、是否检测信用点阈值）",
+        "desc": "优先购买2（选项：普通购买3物品、折扣设置、包含无折扣、是否检测信用点阈值）",
         "recognition": "And",
         "all_of": [
             "CreditIcon",
@@ -33,7 +33,8 @@
             "CanAfford",
             "Priority2OCR_Expected",
             "IsDiscountPriority2",
-            "CreditShoppingPriority2ReserveCreditGate"
+            "CreditShoppingPriority2ReserveCreditGate",
+            "CreditShoppingDiscountComparePriority2"
         ],
         "box_index": 4,
         "pre_wait_freezes": 100,
@@ -50,7 +51,7 @@
         ]
     },
     "CreditShoppingBuyPriority3": {
-        "desc": "优先购买3（选项：优先购买3物品、折扣设置、是否检测信用点阈值）",
+        "desc": "优先购买3（选项：优先购买3物品、折扣设置、包含无折扣、是否检测信用点阈值）",
         "recognition": "And",
         "all_of": [
             "CreditIcon",
@@ -58,7 +59,8 @@
             "CanAfford",
             "Priority3OCR_Expected",
             "IsDiscountPriority3",
-            "CreditShoppingPriority3ReserveCreditGate"
+            "CreditShoppingPriority3ReserveCreditGate",
+            "CreditShoppingDiscountComparePriority3"
         ],
         "box_index": 4,
         "pre_wait_freezes": 100,

@@ -131,7 +131,8 @@
                         "CreditShoppingPriority1AutoGetCredits",
                         "CreditShoppingPriority1UnconditionalPurchase",
                         "CreditShoppingPriority1Items",
-                        "CreditShoppingPriority1DiscountValue"
+                        "CreditShoppingPriority1DiscountValue",
+                        "CreditShoppingPriority1IncludeNoDiscount"
                     ],
                     "pipeline_override": {
                         "CreditShoppingBuyPriority1": {
@@ -619,13 +620,49 @@
             ]
         },
         "CreditShoppingPriority1DiscountValue": {
-            "type": "select",
+            "type": "input",
             "label": "$option.DiscountValue.label",
-            "default_case": "Any",
+            "description": "$option.DiscountValue.description",
+            "inputs": [
+                {
+                    "name": "MinDiscountPriority1",
+                    "label": "$option.DiscountValue.inputs.MinDiscount.label",
+                    "description": "$option.DiscountValue.inputs.MinDiscount.description",
+                    "pipeline_type": "int",
+                    "verify": "^(?:[0-9]|[1-9][0-9])$",
+                    "default": "0",
+                    "pattern_msg": "$option.DiscountValue.inputs.MinDiscount.pattern_msg"
+                }
+            ],
+            "pipeline_override": {
+                "CreditShoppingDiscountComparePriority1": {
+                    "recognition": {
+                        "param": {
+                            "custom_recognition_param": {
+                                "expression": "{IsDiscountPriority1} <= -{MinDiscountPriority1}"
+                            }
+                        }
+                    }
+                },
+                "CreditShoppingDiscountComparePriority1_CanNotAfford": {
+                    "recognition": {
+                        "param": {
+                            "custom_recognition_param": {
+                                "expression": "{IsDiscountPriority1_CanNotAfford} <= -{MinDiscountPriority1}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "CreditShoppingPriority1IncludeNoDiscount": {
+            "type": "switch",
+            "label": "$option.IncludeNoDiscount.label",
+            "description": "$option.IncludeNoDiscount.description",
+            "default_case": "Yes",
             "cases": [
                 {
-                    "name": "Any",
-                    "label": "$option.DiscountValue.cases.Any.label",
+                    "name": "Yes",
                     "pipeline_override": {
                         "IsDiscountPriority1": {
                             "recognition": {
@@ -670,108 +707,42 @@
                                     "count": 1
                                 }
                             }
+                        },
+                        "CreditShoppingBuyPriority1": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "CreditIcon",
+                                        "NotSoldOut",
+                                        "CanAfford",
+                                        "BuyFirstOCR_Expected",
+                                        "IsDiscountPriority1",
+                                        "CreditShoppingPriority1ReserveCreditGate"
+                                    ],
+                                    "box_index": 4
+                                }
+                            }
+                        },
+                        "AutoGetCreditsBuyPriority1": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "CreditIcon",
+                                        "NotSoldOut",
+                                        "CanNotAfford",
+                                        "BuyFirstOCR_CanNotAfford_Expected",
+                                        "IsDiscountPriority1_CanNotAfford"
+                                    ],
+                                    "box_index": 4
+                                }
+                            }
                         }
                     }
                 },
                 {
-                    "name": "-25%",
-                    "label": "$option.DiscountValue.cases.-25%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority1": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50",
-                                "25"
-                            ]
-                        },
-                        "IsDiscountPriority1_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50",
-                                "25"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-50%",
-                    "label": "$option.DiscountValue.cases.-50%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority1": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50"
-                            ]
-                        },
-                        "IsDiscountPriority1_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-75%",
-                    "label": "$option.DiscountValue.cases.-75%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority1": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75"
-                            ]
-                        },
-                        "IsDiscountPriority1_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-95%",
-                    "label": "$option.DiscountValue.cases.-95%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority1": {
-                            "expected": [
-                                "99",
-                                "95"
-                            ]
-                        },
-                        "IsDiscountPriority1_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-99%",
-                    "label": "$option.DiscountValue.cases.-99%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority1": {
-                            "expected": [
-                                "99"
-                            ]
-                        },
-                        "IsDiscountPriority1_CanNotAfford": {
-                            "expected": [
-                                "99"
-                            ]
-                        }
-                    }
+                    "name": "No"
                 }
             ]
         },
@@ -786,7 +757,8 @@
                         "CreditShoppingPriority2AutoGetCredits",
                         "CreditShoppingPriority2UnconditionalPurchase",
                         "CreditShoppingPriority2Items",
-                        "CreditShoppingPriority2DiscountValue"
+                        "CreditShoppingPriority2DiscountValue",
+                        "CreditShoppingPriority2IncludeNoDiscount"
                     ],
                     "pipeline_override": {
                         "CreditShoppingBuyPriority2": {
@@ -1286,13 +1258,49 @@
             ]
         },
         "CreditShoppingPriority2DiscountValue": {
-            "type": "select",
+            "type": "input",
             "label": "$option.DiscountValue.label",
-            "default_case": "-75%",
+            "description": "$option.DiscountValue.description",
+            "inputs": [
+                {
+                    "name": "MinDiscountPriority2",
+                    "label": "$option.DiscountValue.inputs.MinDiscount.label",
+                    "description": "$option.DiscountValue.inputs.MinDiscount.description",
+                    "pipeline_type": "int",
+                    "verify": "^(?:[0-9]|[1-9][0-9])$",
+                    "default": "75",
+                    "pattern_msg": "$option.DiscountValue.inputs.MinDiscount.pattern_msg"
+                }
+            ],
+            "pipeline_override": {
+                "CreditShoppingDiscountComparePriority2": {
+                    "recognition": {
+                        "param": {
+                            "custom_recognition_param": {
+                                "expression": "{IsDiscountPriority2} <= -{MinDiscountPriority2}"
+                            }
+                        }
+                    }
+                },
+                "CreditShoppingDiscountComparePriority2_CanNotAfford": {
+                    "recognition": {
+                        "param": {
+                            "custom_recognition_param": {
+                                "expression": "{IsDiscountPriority2_CanNotAfford} <= -{MinDiscountPriority2}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "CreditShoppingPriority2IncludeNoDiscount": {
+            "type": "switch",
+            "label": "$option.IncludeNoDiscount.label",
+            "description": "$option.IncludeNoDiscount.description",
+            "default_case": "No",
             "cases": [
                 {
-                    "name": "Any",
-                    "label": "$option.DiscountValue.cases.Any.label",
+                    "name": "Yes",
                     "pipeline_override": {
                         "IsDiscountPriority2": {
                             "recognition": {
@@ -1337,108 +1345,42 @@
                                     "count": 1
                                 }
                             }
+                        },
+                        "CreditShoppingBuyPriority2": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "CreditIcon",
+                                        "NotSoldOut",
+                                        "CanAfford",
+                                        "Priority2OCR_Expected",
+                                        "IsDiscountPriority2",
+                                        "CreditShoppingPriority2ReserveCreditGate"
+                                    ],
+                                    "box_index": 4
+                                }
+                            }
+                        },
+                        "AutoGetCreditsBuyPriority2": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "CreditIcon",
+                                        "NotSoldOut",
+                                        "CanNotAfford",
+                                        "Priority2OCR_CanNotAfford_Expected",
+                                        "IsDiscountPriority2_CanNotAfford"
+                                    ],
+                                    "box_index": 4
+                                }
+                            }
                         }
                     }
                 },
                 {
-                    "name": "-25%",
-                    "label": "$option.DiscountValue.cases.-25%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority2": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50",
-                                "25"
-                            ]
-                        },
-                        "IsDiscountPriority2_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50",
-                                "25"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-50%",
-                    "label": "$option.DiscountValue.cases.-50%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority2": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50"
-                            ]
-                        },
-                        "IsDiscountPriority2_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-75%",
-                    "label": "$option.DiscountValue.cases.-75%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority2": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75"
-                            ]
-                        },
-                        "IsDiscountPriority2_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-95%",
-                    "label": "$option.DiscountValue.cases.-95%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority2": {
-                            "expected": [
-                                "99",
-                                "95"
-                            ]
-                        },
-                        "IsDiscountPriority2_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-99%",
-                    "label": "$option.DiscountValue.cases.-99%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority2": {
-                            "expected": [
-                                "99"
-                            ]
-                        },
-                        "IsDiscountPriority2_CanNotAfford": {
-                            "expected": [
-                                "99"
-                            ]
-                        }
-                    }
+                    "name": "No"
                 }
             ]
         },
@@ -1941,13 +1883,49 @@
             ]
         },
         "CreditShoppingPriority3DiscountValue": {
-            "type": "select",
+            "type": "input",
             "label": "$option.DiscountValue.label",
-            "default_case": "Any",
+            "description": "$option.DiscountValue.description",
+            "inputs": [
+                {
+                    "name": "MinDiscountPriority3",
+                    "label": "$option.DiscountValue.inputs.MinDiscount.label",
+                    "description": "$option.DiscountValue.inputs.MinDiscount.description",
+                    "pipeline_type": "int",
+                    "verify": "^(?:[0-9]|[1-9][0-9])$",
+                    "default": "0",
+                    "pattern_msg": "$option.DiscountValue.inputs.MinDiscount.pattern_msg"
+                }
+            ],
+            "pipeline_override": {
+                "CreditShoppingDiscountComparePriority3": {
+                    "recognition": {
+                        "param": {
+                            "custom_recognition_param": {
+                                "expression": "{IsDiscountPriority3} <= -{MinDiscountPriority3}"
+                            }
+                        }
+                    }
+                },
+                "CreditShoppingDiscountComparePriority3_CanNotAfford": {
+                    "recognition": {
+                        "param": {
+                            "custom_recognition_param": {
+                                "expression": "{IsDiscountPriority3_CanNotAfford} <= -{MinDiscountPriority3}"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "CreditShoppingPriority3IncludeNoDiscount": {
+            "type": "switch",
+            "label": "$option.IncludeNoDiscount.label",
+            "description": "$option.IncludeNoDiscount.description",
+            "default_case": "Yes",
             "cases": [
                 {
-                    "name": "Any",
-                    "label": "$option.DiscountValue.cases.Any.label",
+                    "name": "Yes",
                     "pipeline_override": {
                         "IsDiscountPriority3": {
                             "recognition": {
@@ -1992,108 +1970,42 @@
                                     "count": 1
                                 }
                             }
+                        },
+                        "CreditShoppingBuyPriority3": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "CreditIcon",
+                                        "NotSoldOut",
+                                        "CanAfford",
+                                        "Priority3OCR_Expected",
+                                        "IsDiscountPriority3",
+                                        "CreditShoppingPriority3ReserveCreditGate"
+                                    ],
+                                    "box_index": 4
+                                }
+                            }
+                        },
+                        "AutoGetCreditsBuyPriority3": {
+                            "recognition": {
+                                "type": "And",
+                                "param": {
+                                    "all_of": [
+                                        "CreditIcon",
+                                        "NotSoldOut",
+                                        "CanNotAfford",
+                                        "Priority3OCR_CanNotAfford_Expected",
+                                        "IsDiscountPriority3_CanNotAfford"
+                                    ],
+                                    "box_index": 4
+                                }
+                            }
                         }
                     }
                 },
                 {
-                    "name": "-25%",
-                    "label": "$option.DiscountValue.cases.-25%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority3": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50",
-                                "25"
-                            ]
-                        },
-                        "IsDiscountPriority3_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50",
-                                "25"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-50%",
-                    "label": "$option.DiscountValue.cases.-50%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority3": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50"
-                            ]
-                        },
-                        "IsDiscountPriority3_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75",
-                                "50"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-75%",
-                    "label": "$option.DiscountValue.cases.-75%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority3": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75"
-                            ]
-                        },
-                        "IsDiscountPriority3_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95",
-                                "75"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-95%",
-                    "label": "$option.DiscountValue.cases.-95%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority3": {
-                            "expected": [
-                                "99",
-                                "95"
-                            ]
-                        },
-                        "IsDiscountPriority3_CanNotAfford": {
-                            "expected": [
-                                "99",
-                                "95"
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "-99%",
-                    "label": "$option.DiscountValue.cases.-99%.label",
-                    "pipeline_override": {
-                        "IsDiscountPriority3": {
-                            "expected": [
-                                "99"
-                            ]
-                        },
-                        "IsDiscountPriority3_CanNotAfford": {
-                            "expected": [
-                                "99"
-                            ]
-                        }
-                    }
+                    "name": "No"
                 }
             ]
         },

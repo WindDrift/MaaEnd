@@ -35,7 +35,10 @@
                             "ArsenalTicket",
                             "Oroberyl"
                         ],
-                        "CreditShoppingPriority1DiscountValue": "Any",
+                        "CreditShoppingPriority1DiscountValue": {
+                            "MinDiscountPriority1": "0"
+                        },
+                        "CreditShoppingPriority1IncludeNoDiscount": "Yes",
                         "CreditShoppingPriority2": "Yes",
                         "CreditShoppingPriority2Items": [
                             "ArsenalTicket",
@@ -53,7 +56,10 @@
                             "Protoprism",
                             "Protohedron"
                         ],
-                        "CreditShoppingPriority2DiscountValue": "-75%",
+                        "CreditShoppingPriority2DiscountValue": {
+                            "MinDiscountPriority2": "75"
+                        },
+                        "CreditShoppingPriority2IncludeNoDiscount": "No",
                         "CreditShoppingPriority3": "No"
                     }
                 },
