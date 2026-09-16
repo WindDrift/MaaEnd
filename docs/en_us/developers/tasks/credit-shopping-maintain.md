@@ -108,7 +108,7 @@ The structure is the same for all three tiers, but the default strategies differ
 | Priority 2 | Off | Off | Only buy if reserve threshold is met |
 | Priority 3 | Off | Off | Same as above, lower priority |
 
-Each tier can be independently configured: selected items, minimum discount, whether to skip the reserve threshold, whether to allow credit replenishment when unaffordable.  
+Each tier can be independently configured: selected items, discount threshold, whether to include non-discounted items, whether to skip the reserve threshold, whether to allow credit replenishment when unaffordable.  
 Only after all three tiers fail to match does the unified reserve threshold node handle the fallback exit.
 
 ### Credit Point Reserve Threshold
@@ -130,9 +130,13 @@ Each tier has its own independent switch; insufficient refresh cost **will not**
 
 ### Discount Options
 
-The discount option for each tier modifies the corresponding tier's discount OCR `expected`, or changes it to ColorMatch ("any discount").  
-"Any discount" uses color matching instead of loose OCR to preserve the offset anchor ROI.  
-Discount rules must cover both the affordable and unaffordable sides.
+Each tier's discount is controlled by two options:
+
+- **Discount threshold** (`CreditShoppingPriority{N}DiscountValue`, input, 0-99): rewrites the expression of `CreditShoppingDiscountComparePriority{N}(_CanNotAfford)` (`ExpressionRecognition`) to `{IsDiscountPriority{N}(_CanNotAfford)} <= -{MinDiscountPriority{N}}`. The discount badge OCR extracts the value with the regex `-?\d{1,2}` (the badge text looks like `-75%`; a missed minus sign yields a positive value, the comparison fails, and the item is skipped — fail-safe, missed purchase instead of a wrong purchase). Set 0 to buy every item that has a discount badge.
+- **Include non-discounted items** (`CreditShoppingPriority{N}IncludeNoDiscount`, switch, on/off/on by default): when enabled, the discount OCR node is replaced entirely by a full-range `ColorMatch` (any non-empty ROI passes) and the `all_of` of both purchase chains reverts to exclude the compare node — equivalent to "any discount"; the "Discount threshold" setting is ignored.
+
+The base expressions inline each tier's default value (0 / 75 / 0), matching the option defaults, so behavior stays correct even if the option override is not applied.  
+Discount rules must cover both the affordable and unaffordable sides: all six And chains in `Flow/BuyAction.json` and `Credit/AutoGetCredits.json` must include the compare node (appended at the end; `box_index: 4` still points to the discount OCR node).
 
 ### Force Strategy and Refresh
 

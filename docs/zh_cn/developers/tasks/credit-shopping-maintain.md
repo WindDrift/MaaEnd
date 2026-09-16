@@ -108,7 +108,7 @@ ShelfBase → 白名单 → 折扣 → 进入补信用判断
 | 优先购买 2 | 关 | 关 | 需满足保留阈值才买 |
 | 优先购买 3 | 关 | 关 | 同上，更低优先级 |
 
-每档可独立配置：勾选商品、最低折扣、是否跳过保留阈值、买不起时是否允许补信用。  
+每档可独立配置：勾选商品、折扣比例、包含无折扣物品、是否跳过保留阈值、买不起时是否允许补信用。  
 三档都未命中后，才由统一的保留阈值节点负责兜底退出。
 
 ### 保留信用点阈值
@@ -130,9 +130,13 @@ ShelfBase → 白名单 → 折扣 → 进入补信用判断
 
 ### 折扣选项
 
-每档的折扣选项改写对应档位的折扣 OCR `expected`，或改为 ColorMatch（「任意折扣」）。  
-「任意折扣」用颜色匹配而非宽松 OCR，是为保留偏移锚点 ROI。  
-折扣规则须同时覆盖买得起与买不起两侧。
+每档的折扣由两个选项共同控制：
+
+- **折扣比例**（`CreditShoppingPriority{N}DiscountValue`，input，0-99）：改写 `CreditShoppingDiscountComparePriority{N}(_CanNotAfford)`（`ExpressionRecognition`）的 expression 为 `{IsDiscountPriority{N}(_CanNotAfford)} <= -{MinDiscountPriority{N}}`。折扣徽标 OCR 以正则 `-?\d{1,2}` 提取数值（徽标文本形如 `-75%`；负号丢失时得正值、比较不命中，fail-safe 漏买而非错买），填 0 时购买所有有折扣徽标的物品。
+- **包含无折扣物品**（`CreditShoppingPriority{N}IncludeNoDiscount`，switch，默认开/关/开）：开启后把折扣 OCR 节点整体替换为全范围 `ColorMatch`（非空 ROI 恒定通过），并把两条购买链的 `all_of` 回退为不含比较节点——行为等同"任意折扣"，此时「折扣比例」被忽略。
+
+比较节点的基础表达式内联了各档默认值（0 / 75 / 0），与选项默认一致，选项 override 未生效时也不会偏离默认行为。  
+折扣规则须同时覆盖买得起与买不起两侧：`Flow/BuyAction.json` 与 `Credit/AutoGetCredits.json` 的 6 条 And 链都要挂比较节点（追加在末尾，`box_index: 4` 仍指向折扣 OCR 节点）。
 
 ### 强制策略与刷新
 
