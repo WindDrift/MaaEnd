@@ -17,6 +17,7 @@
                 "EssenceFilterAfterBattleNthRecognition",
                 "EssenceGridAdvanceRecognition",
                 "EssenceGridPendingRecognition",
+                "EveryNthHit",
                 "ExpendableRecognition",
                 "ExpressionRecognition",
                 "ImageCheckNotPassedRecognition",
@@ -563,6 +564,28 @@
                 "required": [ "custom_recognition_param" ],
                 "properties": {
                     "custom_recognition_param": { "$ref": "./components/outpost_trading.schema.json#/$defs/PriorityItemRecognitionParam" }
+                }
+            }
+        },
+        {
+            "if": {
+                "type": "object",
+                "required": [ "custom_recognition" ],
+                "properties": { "custom_recognition": { "const": "EveryNthHit" } }
+            },
+            "then": {
+                "type": "object",
+                "required": [ "custom_recognition_param" ],
+                "properties": {
+                    "custom_recognition_param": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [ "key", "every" ],
+                        "properties": {
+                            "key": { "type": "string", "minLength": 1 },
+                            "every": { "type": "integer", "minimum": 1 }
+                        }
+                    }
                 }
             }
         }
