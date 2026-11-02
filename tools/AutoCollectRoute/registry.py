@@ -28,6 +28,8 @@ RARE_SHOWING_TYPE = "Nurturance"
 HAND_WRITTEN_OPTIONS = (
     "AutoCollectSchedule",
     "AutoCollectStashBackpackSubTask",
+    "AutoCollectMidSweepStash",
+    "AutoCollectMidSweepStashEvery",
     "AutoCollectMode",
     "AutoCollectTargetInventory",
 )
@@ -354,6 +356,8 @@ def route_nodes(route: Route, name: str) -> dict[str, Any]:
             },
             "post_delay": 0,
             "rate_limit": 0,
+            # 检查未命中时同轮落到终止符，避免框架反复评估检查节点把计数当成评估次数
+            "next": ["AutoCollectMidSweepStashCheck", "AutoCollectEnd"],
         },
         f"{node}Failed": {
             "desc": f"路线 {name} 失败提示",
@@ -382,6 +386,25 @@ def dispatch_document(groups: list[Group], routes: list[Route], names: dict[str,
             "post_delay": 0,
             "rate_limit": 0,
             "next": [*(f"[JumpBack]{group.node}Skipped" for group in groups), "AutoCollectInventoryReleaseSnapshot"],
+        },
+        "AutoCollectMidSweepStashCheck": {
+            "desc": "每完成 every 条采集路线后存放一次背包",
+            "enabled": False,
+            "recognition": {
+                "type": "Custom",
+                "param": {
+                    "custom_recognition": "EveryNthHit",
+                    "custom_recognition_param": {"key": "AutoCollect", "every": 6},
+                },
+            },
+            "pre_delay": 0,
+            "action": {
+                "type": "Custom",
+                "param": {"custom_action": "SubTask", "custom_action_param": {"sub": ["StashBackpackSubTask"]}},
+            },
+            "post_delay": 0,
+            "rate_limit": 0,
+            "focus": {"Node.Recognition.Succeeded": "$task.AutoCollect.focus.mid_sweep_stash"},
         },
     }
     for group in groups:
